@@ -4,7 +4,8 @@
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
     <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <RootNamespace>Nova4</RootNamespace>
+    <RootNamespace>Nova</RootNamespace>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
-  <Import Project="$(MSBuildProjectDirectory)\**\Module.props" />
+  <Import Project="$(MSBuildProjectDirectory)\**\Addon.props" />
 </Project>

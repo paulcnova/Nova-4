@@ -71,7 +71,7 @@ namespace Nova.Internal
 		
 		#region Public Methods
 		
-		/// <summary>Loads in all the content from the given paths. Calls <see cref="ContentLoaded"/> when the resource has been loaded in.</summary>
+		/// <summary>Loads in all the content from the given paths. Calls  when the resource has been loaded in.</summary>
 		/// <param name="paths">The array of paths to load from.</param>
 		public void LoadAllContent(params string[] paths)
 		{

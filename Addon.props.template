@@ -1,0 +1,25 @@
+
+<Project>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);Nova_4_NAME</DefineConstants>
+	</PropertyGroup>
+	
+	<Target Name="Zip_NAME" AfterTargets="Build">
+		<ItemGroup>
+			<NAMEAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+		</ItemGroup>
+		
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/__DIRECTORY__"/>
+		<Copy
+			SourceFiles="@(NAMEAddonFiles)"
+			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/__DIRECTORY__/%(RecursiveDir)"
+		/>
+		<ZipDirectory
+			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"
+			DestinationFile="$(MSBuildProjectDirectory)/exports/NAME_addon.zip"
+			Overwrite="true"
+		/>
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+	</Target>
+</Project>

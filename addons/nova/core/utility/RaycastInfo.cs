@@ -30,11 +30,17 @@ public sealed class RaycastInfo
 	/// <summary>Gets the collider the raycast hit.</summary>
 	public Variant Collider => this.dictionary.TryGetValue("collider", out Variant collider) ? collider : default;
 	
-	/// <summary>
+	/// <summary>Gets the shape of the object the raycast hit.</summary>
 	public int Shape => this.dictionary.TryGetValue("shape", out Variant shape) ? shape.AsInt32() : -1;
+	
+	/// <summary>Gets the RID of the object the raycast hit.</summary>
 	public Rid RID => this.dictionary.TryGetValue("rid", out Variant rid) ? rid.AsRid() : default;
+	
+	/// <summary>Gets the dictionary that contains all the information from the raycast.</summary>
 	public Dictionary Dictionary => this.dictionary;
 	
+	/// <summary>A constructor for the raycast info.</summary>
+	/// <param name="dictionary">The dictionary that contains all the information from the raycast.</param>
 	public RaycastInfo(Dictionary dictionary)
 	{
 		this.dictionary = dictionary;
@@ -44,6 +50,8 @@ public sealed class RaycastInfo
 	
 	#region Public Methods
 	
+	/// <summary>Converts the dictionary to a raycast info implicitly.</summary>
+	/// <param name="dictionary">The dictionary that contains all the information from the raycast.</param>
 	public static implicit operator RaycastInfo(Dictionary dictionary) => new RaycastInfo(dictionary);
 	
 	#endregion // Public Methods
