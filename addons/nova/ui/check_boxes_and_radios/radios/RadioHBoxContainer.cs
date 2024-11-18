@@ -3,6 +3,7 @@ namespace Nova.UI;
 
 using Godot;
 
+/// <summary>A horizontal box container that acts like a radio container.</summary>
 [GlobalClass] public partial class RadioHBoxContainer : HBoxContainer, IRadioContainer
 {
 	#region Properties

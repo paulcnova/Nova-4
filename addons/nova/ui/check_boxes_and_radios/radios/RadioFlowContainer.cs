@@ -3,6 +3,7 @@ namespace Nova.UI;
 
 using Godot;
 
+/// <summary>A flow container that acts like a radio container.</summary>
 [GlobalClass] public partial class RadioFlowContainer : FlowContainer, IRadioContainer
 {
 	#region Properties
@@ -13,6 +14,7 @@ using Godot;
 	/// <inheritdoc/>
 	public Button Selected { get; private set; }
 	
+	/// <summary>Gets if a child is selected.</summary>
 	public bool IsChildSelected
 	{
 		get
@@ -26,6 +28,8 @@ using Godot;
 		}
 	}
 	
+	/// <summary>An event for when a button gets selected.</summary>
+	/// <param name="selected">The button that gets selected.</param>
 	[Signal] public delegate void OnSelectedEventHandler(Button selected);
 	
 	#endregion // Properties
@@ -82,6 +86,10 @@ using Godot;
 	
 	/// <inheritdoc/>
 	public void SelectUsingText(string text) => this.SelectUsingText(text, true);
+	
+	/// <summary>Selects the radio button by searching from the text of the button.</summary>
+	/// <param name="text">The text to search with.</param>
+	/// <param name="emit">Set to true to emit signals.</param>
 	public void SelectUsingText(string text, bool emit)
 	{
 		foreach(Node child in this.GetChildren())
@@ -133,6 +141,8 @@ using Godot;
 		}
 	}
 	
+	/// <summary>Called when a button gets selected.</summary>
+	/// <param name="button">The button that got selected.</param>
 	protected virtual void OnSelect(Button button)
 	{
 		foreach(Node child in this.GetChildren())

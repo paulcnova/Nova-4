@@ -25,7 +25,7 @@ public interface IRadioContainer
 	/// <param name="button">The radio button to set selected.</param>
 	void SetSelected(Button button);
 	
-	/// <summary>Selects the radio button by using the text of the button.</summary>
+	/// <summary>Selects the radio button by searching for the text of the button.</summary>
 	/// <param name="text">The text to search with.</param>
 	void SelectUsingText(string text);
 	

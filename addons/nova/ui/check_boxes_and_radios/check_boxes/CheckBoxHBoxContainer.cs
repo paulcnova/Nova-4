@@ -5,6 +5,7 @@ using Godot;
 
 using System.Collections.Generic;
 
+/// <summary>A horizontal box container that acts like a check box container.</summary>
 [GlobalClass] public partial class CheckBoxHBoxContainer : HBoxContainer, ICheckBoxContainer
 {
 	#region Properties
