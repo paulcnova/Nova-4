@@ -7,10 +7,13 @@ using Godot;
 {
 	#region Properties
 	
+	/// <inheritdoc/>
 	[Export] public bool DefaultSelectFirstSlot { get; set; } = true;
 	
+	/// <inheritdoc/>
 	public Button Selected { get; private set; }
 	
+	/// <inheritdoc cref="RadioFlowContainer.IsChildSelected"/>
 	public bool IsChildSelected
 	{
 		get
@@ -24,12 +27,14 @@ using Godot;
 		}
 	}
 	
+	/// <inheritdoc cref="RadioFlowContainer.OnSelectedEventHandler"/>
 	[Signal] public delegate void OnSelectedEventHandler(Button selected);
 	
 	#endregion // Properties
 	
 	#region Godot Methods
 	
+	/// <inheritdoc/>
 	public override void _Ready()
 	{
 		foreach(Node child in this.GetChildren())
@@ -56,6 +61,7 @@ using Godot;
 	
 	#region Public Methods
 	
+	/// <inheritdoc/>
 	public void ForceSelectFirstSlot()
 	{
 		if(this.DefaultSelectFirstSlot && this.GetChildCount() >= 1 && !this.IsChildSelected)
@@ -69,12 +75,16 @@ using Godot;
 		}
 	}
 	
+	/// <inheritdoc/>
 	public void SetSelected(Button button)
 	{
 		this.Selected = button;
 	}
 	
+	/// <inheritdoc/>
 	public void SelectUsingText(string text) => this.SelectUsingText(text, true);
+	
+	/// <inheritdoc cref="RadioFlowContainer.SelectUsingText(string, bool)"/>
 	public void SelectUsingText(string text, bool emit)
 	{
 		foreach(Node child in this.GetChildren())
@@ -126,6 +136,7 @@ using Godot;
 		}
 	}
 	
+	/// <inheritdoc cref="RadioFlowContainer.OnSelect(Button)"/>
 	protected virtual void OnSelect(Button button)
 	{
 		foreach(Node child in this.GetChildren())

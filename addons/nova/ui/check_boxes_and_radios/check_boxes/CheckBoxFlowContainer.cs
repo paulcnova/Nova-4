@@ -5,23 +5,35 @@ using Godot;
 
 using System.Collections.Generic;
 
+/// <summary>A flow container that acts like a check box container.</summary>
 [GlobalClass] public partial class CheckBoxFlowContainer : FlowContainer, ICheckBoxContainer
 {
 	#region Properties
 	
+	/// <inheritdoc/>
 	[Export] public int MinSelections { get; set; } = 1;
+	
+	/// <inheritdoc/>
 	[Export] public int MaxSelections { get; set; } = 1;
 	
+	/// <inheritdoc/>
 	[Export] public int SelectionsCount { get; set; } = 0;
+	
+	/// <inheritdoc/>
 	public bool IsAtMinimumSelections => this.SelectionsCount <= this.MinSelections;
+	
+	/// <inheritdoc/>
 	public bool IsAtMaximumSelections => this.SelectionsCount >= this.MaxSelections;
 	
+	/// <summary>An event for when a check box gets selected.</summary>
+	/// <param name="buttons">The list of buttons that are selected.</param>
 	[Signal] public delegate void OnSelectedEventHandler(Button[] buttons);
 	
 	#endregion // Properties
 	
 	#region Godot Methods
 	
+	/// <inheritdoc/>
 	public override void _Ready()
 	{
 		foreach(Node child in this.GetChildren())
@@ -36,6 +48,7 @@ using System.Collections.Generic;
 	
 	#region Public Methods
 	
+	/// <inheritdoc/>
 	public void CheckToDisableRest()
 	{
 		if(this.SelectionsCount >= this.MaxSelections)
@@ -44,7 +57,12 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <inheritdoc/>
 	public void SelectUsingText(string text) => this.SelectUsingText(text, true);
+	
+	/// <summary>Selects a box using the given text.</summary>
+	/// <param name="text">The text to match the box to select with.</param>
+	/// <param name="emit">Set to true to emit the <see cref="OnSelected"/> signal.</param>
 	public void SelectUsingText(string text, bool emit)
 	{
 		if(this.IsAtMaximumSelections) { return; }
@@ -70,7 +88,12 @@ using System.Collections.Generic;
 		}
 	}
 	
-	public void SelectUsingText(string[] text) => this.SelectUsingText(text, true);
+	/// <inheritdoc/>
+	public void SelectUsingText(string[] texts) => this.SelectUsingText(texts, true);
+	
+	/// <summary>Selects boxes using the given list of texts.</summary>
+	/// <param name="texts">The list of texts to match the boxes to select.</param>
+	/// <param name="emit">Set to true to emit the <see cref="OnSelected"/> signal.</param>
 	public void SelectUsingText(string[] texts, bool emit)
 	{
 		foreach(string text in texts)
@@ -79,6 +102,7 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <summary>Emits the <see cref="OnSelected"/> signal.</summary>
 	public void Emit()
 	{
 		List<Button> buttons = new List<Button>();
@@ -113,6 +137,8 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <summary>Called when the check box gets selected.</summary>
+	/// <param name="button">The button that got selected.</param>
 	protected virtual void OnSelect(Button button)
 	{
 		// Ignore the button press since it shouldn't get lowered
@@ -152,6 +178,7 @@ using System.Collections.Generic;
 		this.EmitSignal(SignalName.OnSelected, buttons.ToArray());
 	}
 	
+	/// <summary>Enables all the check boxes.</summary>
 	protected void EnableAll()
 	{
 		foreach(Node child in this.GetChildren())
@@ -163,6 +190,7 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <summary>Disables all unselected check boxes.</summary>
 	protected void DisableAllUnselected()
 	{
 		foreach(Node child in this.GetChildren())

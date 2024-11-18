@@ -9,19 +9,29 @@ using System.Collections.Generic;
 {
 	#region Properties
 	
+	/// <inheritdoc/>
 	[Export] public int MinSelections { get; set; } = 1;
+	
+	/// <inheritdoc/>
 	[Export] public int MaxSelections { get; set; } = 1;
 	
+	/// <inheritdoc/>
 	[Export] public int SelectionsCount { get; set; } = 0;
+	
+	/// <inheritdoc/>
 	public bool IsAtMinimumSelections => this.SelectionsCount <= this.MinSelections;
+	
+	/// <inheritdoc/>
 	public bool IsAtMaximumSelections => this.SelectionsCount >= this.MaxSelections;
 	
+	/// <inheritdoc cref="CheckBoxFlowContainer.OnSelectedEventHandler"/>
 	[Signal] public delegate void OnSelectedEventHandler(Button[] buttons);
 	
 	#endregion // Properties
 	
 	#region Godot Methods
 	
+	/// <inheritdoc/>
 	public override void _Ready()
 	{
 		foreach(Node child in this.GetChildren())
@@ -36,6 +46,7 @@ using System.Collections.Generic;
 	
 	#region Public Methods
 	
+	/// <inheritdoc/>
 	public void CheckToDisableRest()
 	{
 		if(this.SelectionsCount >= this.MaxSelections)
@@ -44,7 +55,10 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <inheritdoc/>
 	public void SelectUsingText(string text) => this.SelectUsingText(text, true);
+	
+	/// <inheritdoc cref="CheckBoxFlowContainer.SelectUsingText(string, bool)"/>
 	public void SelectUsingText(string text, bool emit)
 	{
 		if(this.IsAtMaximumSelections) { return; }
@@ -70,7 +84,10 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <inheritdoc/>
 	public void SelectUsingText(string[] text) => this.SelectUsingText(text, true);
+	
+	/// <inheritdoc cref="CheckBoxFlowContainer.SelectUsingText(string[], bool)"/>
 	public void SelectUsingText(string[] texts, bool emit)
 	{
 		foreach(string text in texts)
@@ -79,6 +96,7 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <inheritdoc cref="CheckBoxFlowContainer.Emit"/>
 	public void Emit()
 	{
 		List<Button> buttons = new List<Button>();
@@ -113,6 +131,7 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <inheritdoc cref="CheckBoxFlowContainer.OnSelect(Button)"/>
 	protected virtual void OnSelect(Button button)
 	{
 		// Ignore the button press since it shouldn't get lowered
@@ -152,6 +171,7 @@ using System.Collections.Generic;
 		this.EmitSignal(SignalName.OnSelected, buttons.ToArray());
 	}
 	
+	/// <inheritdoc cref="CheckBoxFlowContainer.EnableAll"/>
 	protected void EnableAll()
 	{
 		foreach(Node child in this.GetChildren())
@@ -163,6 +183,7 @@ using System.Collections.Generic;
 		}
 	}
 	
+	/// <inheritdoc cref="CheckBoxFlowContainer.DisableAllUnselected"/>
 	protected void DisableAllUnselected()
 	{
 		foreach(Node child in this.GetChildren())

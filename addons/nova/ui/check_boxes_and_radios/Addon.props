@@ -15,6 +15,11 @@
 			SourceFiles="@(CBRAddonFiles)"
 			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/ui/check_boxes_and_radios/%(RecursiveDir)"
 		/>
+		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/core"/>
+		<Copy
+			SourceFiles="@(CoreAddonFiles)"
+			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/core/%(RecursiveDir)"
+		/>
 		<ZipDirectory
 			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"
 			DestinationFile="$(MSBuildProjectDirectory)/exports/check_boxes_and_radios_addon.zip"
