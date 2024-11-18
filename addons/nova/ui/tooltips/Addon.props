@@ -7,7 +7,6 @@
 	<Target Name="Zip_Tooltips" AfterTargets="Build">
 		<ItemGroup>
 			<TooltipsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
-			<TooltipsDependenciesAddonFiles Include="$(MSBuildProjectDirectory)/**/DisplayableResource.cs"/>
 		</ItemGroup>
 		
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
@@ -16,9 +15,10 @@
 			SourceFiles="@(TooltipsAddonFiles)"
 			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/ui/tooltips/%(RecursiveDir)"
 		/>
+		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/core"/>
 		<Copy
-			SourceFiles="@(TooltipsDependenciesAddonFiles)"
-			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/%(RecursiveDir)"
+			SourceFiles="@(CoreAddonFiles)"
+			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/core/%(RecursiveDir)"
 		/>
 		<ZipDirectory
 			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"

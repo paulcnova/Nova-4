@@ -1,26 +1,29 @@
 
 using Godot;
-using Godot.Collections;
 
 namespace Nova.Tooltips
 {
+	/// <summary>A node that holds all the data to displayable resources for use in tooltips.</summary>
 	public partial class TooltipEncyclopediaNode : Node
 	{
 		#region Properties
 		
 		private const string GameDataPath = "res://content/game_data/";
 		
+		/// <summary>Gets the static instance to this node.</summary>
 		public static TooltipEncyclopediaNode Instance { get; private set; }
 		
 		#endregion // Properties
 		
 		#region Godot Methods
 		
+		/// <inheritdoc/>
 		public override void _Ready()
 		{
 			DRML.ContentLoaded += this.FindTooltips;
 		}
 		
+		/// <inheritdoc/>
 		public override void _EnterTree()
 		{
 			if(Instance == null)
@@ -35,6 +38,7 @@ namespace Nova.Tooltips
 			base._EnterTree();
 		}
 		
+		/// <inheritdoc/>
 		public override void _ExitTree()
 		{
 			if(Instance == this)
@@ -48,6 +52,9 @@ namespace Nova.Tooltips
 		
 		#region Public Methods
 		
+		/// <summary>Creates a tooltip.</summary>
+		/// <param name="tooltipID">The ID for the tooltip entry.</param>
+		/// <returns>Returns the tooltip.</returns>
 		public BaseTooltipUI CreateTooltip(string tooltipID)
 		{
 			DisplayableResource resource = TooltipEncyclopedia.FindEntry(tooltipID);
@@ -112,10 +119,12 @@ namespace Nova
 {
 	using Nova.Tooltips;
 	
+	/// <summary>A static class that holds all the data for tooltips to use.</summary>
 	public static class TooltipEncyclopedia
 	{
 		#region Public Methods
 		
+		/// <inheritdoc cref="TooltipEncyclopediaNode.CreateTooltip(string)"/>
 		public static BaseTooltipUI CreateTooltip(string tooltipID)
 		{
 			if(TooltipEncyclopediaNode.Instance == null)
@@ -127,6 +136,9 @@ namespace Nova
 			return TooltipEncyclopediaNode.Instance.CreateTooltip(tooltipID);
 		}
 		
+		/// <summary>Finds the entry given the ID.</summary>
+		/// <param name="entryID">The tooltip entry ID.</param>
+		/// <returns>Returns the displayable resource that's associated with the ID. If nothing was found, then it returns null.</returns>
 		public static DisplayableResource FindEntry(string entryID)
 		{
 			if(TooltipEncyclopediaNode.Instance == null)

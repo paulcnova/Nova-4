@@ -3,10 +3,12 @@ namespace Nova.Tooltips;
 
 using Godot;
 
+/// <summary>A rich text label that enables the use of nested tooltips.</summary>
 [GlobalClass] public partial class NestedTooltipRichTextLabel : RichTextLabel
 {
 	#region Godot Methods
 	
+	/// <inheritdoc/>
 	public override void _Ready()
 	{
 		this.MetaHoverStarted += this.OnLinkHoverStarted;
