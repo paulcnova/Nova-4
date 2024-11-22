@@ -1,8 +1,10 @@
 
-using Nova.Boot;
-
 using Godot;
 using Godot.Collections;
+
+using Nova.Boot;
+
+using System.Collections.Generic;
 
 namespace Nova.Internal
 {
@@ -52,7 +54,7 @@ namespace Nova.Internal
 			
 			if(boot == null)
 			{
-				this.LoadAllContent(GameDataPath);
+				this.LoadAllContent(100, GameDataPath);
 			}
 			base._Ready();
 		}
@@ -71,9 +73,22 @@ namespace Nova.Internal
 		
 		#region Public Methods
 		
-		/// <summary>Loads in all the content from the given paths. Calls  when the resource has been loaded in.</summary>
+		/// <summary>Loads in all the content from the given paths asynchronously. Calls  when the resource has been loaded in.</summary>
+		/// <param name="batchLoad">The amount of content to load in batches for the loading screen to update in between.</param>
 		/// <param name="paths">The array of paths to load from.</param>
-		public void LoadAllContent(params string[] paths)
+		public void LoadAllContent(int batchLoad = 100, params string[] paths)
+		{
+			Timing.RunCoroutine(this.LoadAllContentAsync(batchLoad, paths));
+		}
+		
+		#endregion // Public Methods
+		
+		#region Private Methods
+		
+		/// <summary>Loads in all the content from the given paths asynchronously. Calls  when the resource has been loaded in.</summary>
+		/// <param name="batchLoad">The amount of content to load in batches for the loading screen to update in between.</param>
+		/// <param name="paths">The array of paths to load from.</param>
+		public IEnumerator<double> LoadAllContentAsync(int batchLoad, string[] paths)
 		{
 			Array<DisplayableResource> resources = new Array<DisplayableResource>();
 			
@@ -86,6 +101,7 @@ namespace Nova.Internal
 			{
 				resources.AddRange(ResourceLocator.LoadAll<DisplayableResource>(path));
 			}
+			yield return Timing.WaitForOneFrame;
 			
 			int current = 0;
 			int max = resources.Count;
@@ -93,11 +109,16 @@ namespace Nova.Internal
 			foreach(DisplayableResource resource in resources)
 			{
 				this.EmitSignal(SignalName.ContentLoaded, resource, current++, max);
+				if(current % batchLoad == 0)
+				{
+					yield return Timing.WaitForOneFrame;
+				}
 			}
 			this.EmitSignal(SignalName.LoadingCompleted);
+			yield return Timing.WaitForOneFrame;
 		}
 		
-		#endregion // Public Methods
+		#endregion // Private Methods
 	}
 }
 
@@ -161,15 +182,16 @@ namespace Nova
 		#region Public Methods
 		
 		/// <summary>Loads in all the content from the given paths. Calls <see cref="ContentLoaded"/> when the resource has been loaded in.</summary>
+		/// <param name="batchLoad">The amount of content to load in batches for the loading screen to update in between.</param>
 		/// <param name="paths">The array of paths to load from.</param>
-		public static void LoadAllContent(params string[] paths)
+		public static void LoadAllContent(int batchLoad = 100, params string[] paths)
 		{
 			if(DisplayableResourceMassLoader.Instance == null)
 			{
 				GDX.PrintWarning("Displayable Resource Mass Loader is not instantiated! Could not load all content");
 				return;
 			}
-			DisplayableResourceMassLoader.Instance.LoadAllContent(paths);
+			DisplayableResourceMassLoader.Instance.LoadAllContent(batchLoad, paths);
 		}
 		
 		#endregion // Public Methods

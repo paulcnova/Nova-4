@@ -1,23 +1,39 @@
 
+__NOVA_4__NAME__
+__NAME_ADDON_DIRECTORY__
+__Directory__
+__NAME_OF_ADDON__
+__NAME__
+__NAME_ADDON_FILES__
+__CF_NAME__
+__ZIP_NAME__
+
 <Project>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);Nova_4_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants);__NOVA_4__NAME__</DefineConstants>
+		<__NAME_ADDON_DIRECTORY__>__Directory__</__NAME_ADDON_DIRECTORY__>
+		<__NAME_OF_ADDON__>__NAME__</__NAME_OF_ADDON__>
 	</PropertyGroup>
 	
-	<Target Name="Zip_NAME" AfterTargets="Build">
-		<ItemGroup>
-			<NAMEAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
-		</ItemGroup>
-		
-		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
-		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/__DIRECTORY__"/>
+	<ItemGroup>
+		<__NAME_ADDON_FILES__ Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+	</ItemGroup>
+	
+	<Target Name="__CF_NAME__" Label="__CF_NAME__">
+		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(__NAME_ADDON_DIRECTORY__)"/>
 		<Copy
-			SourceFiles="@(NAMEAddonFiles)"
-			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/__DIRECTORY__/%(RecursiveDir)"
+			SourceFiles="@(__NAME_ADDON_FILES__)"
+			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(__NAME_ADDON_DIRECTORY__)/%(RecursiveDir)"
 		/>
+	</Target>
+	
+	<Target Name="__ZIP_NAME__" Label="__ZIP_NAME__" AfterTargets="Build">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+		<!-- <MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=__NAME__"/> -->
+		<CallTarget Targets="__CF_NAME__"/>
 		<ZipDirectory
 			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"
-			DestinationFile="$(MSBuildProjectDirectory)/exports/NAME_addon.zip"
+			DestinationFile="$(MSBuildProjectDirectory)/exports/$(__NAME_OF_ADDON__)_addon.zip"
 			Overwrite="true"
 		/>
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>

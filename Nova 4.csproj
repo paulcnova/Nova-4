@@ -7,5 +7,6 @@
     <RootNamespace>Nova</RootNamespace>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
-  <Import Project="$(MSBuildProjectDirectory)\**\Addon.props" />
+  <Import Project="$(MSBuildProjectDirectory)\**\*.Addon.props" />
+  <Import Project="$(MSBuildProjectDirectory)\**\*.AddonList.props" />
 </Project>

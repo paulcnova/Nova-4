@@ -1,0 +1,16 @@
+
+__ZIP_ADDON_LIST_NAME__
+__Addon_Name__
+
+<Project>
+	<Target Name="__ZIP_ADDON_LIST_NAME__" Label="__ZIP_ADDON_LIST_NAME__" AfterTargets="Build" DependsOnTargets="Zip_Core">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+		<MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=__Addon_Name___1"/>
+		<ZipDirectory
+			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"
+			DestinationFile="$(MSBuildProjectDirectory)/exports/projects/__Addon_Name___addon_list.zip"
+			Overwrite="true"
+		/>
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+	</Target>
+</Project>

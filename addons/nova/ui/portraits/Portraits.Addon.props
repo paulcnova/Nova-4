@@ -1,0 +1,33 @@
+
+<Project>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);Nova_4_Portraits</DefineConstants>
+		<UIPortraitsAddonDirectory>ui/portraits</UIPortraitsAddonDirectory>
+		<UIPortraitsAddonName>portraits</UIPortraitsAddonName>
+	</PropertyGroup>
+	
+	<Target Name="CF_UI_Portraits" Label="CF_UI_Portraits">
+		<ItemGroup>
+			<UIPortraitsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.png"/>
+			<UIPortraitsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.Addon.props"/>
+		</ItemGroup>
+		
+		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(UIPortraitsAddonDirectory)"/>
+		<Copy
+			SourceFiles="@(UIPortraitsAddonFiles)"
+			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(UIPortraitsAddonDirectory)/%(RecursiveDir)"
+		/>
+	</Target>
+	
+	<Target Name="Zip_UI_Portraits" Label="Zip_UI_Portraits" AfterTargets="Build">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+		<!-- <MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=portraits"/> -->
+		<CallTarget Targets="CF_UI_Portraits"/>
+		<ZipDirectory
+			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"
+			DestinationFile="$(MSBuildProjectDirectory)/exports/$(UIPortraitsAddonName)_addon.zip"
+			Overwrite="true"
+		/>
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+	</Target>
+</Project>

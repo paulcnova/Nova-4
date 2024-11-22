@@ -1,0 +1,32 @@
+
+<Project>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);Nova_4_CBR</DefineConstants>
+		<CBRAddonDirectory>ui/check_boxes_and_radios</CBRAddonDirectory>
+		<CBRAddonName>check_boxes_and_radios</CBRAddonName>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<CBRAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+	</ItemGroup>
+	
+	<Target Name="CF_CBR" Label="CF_CBR">
+		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(CBRAddonDirectory)"/>
+		<Copy
+			SourceFiles="@(CBRAddonFiles)"
+			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(CBRAddonDirectory)/%(RecursiveDir)"
+		/>
+	</Target>
+	
+	<Target Name="Zip_CBR" Label="Zip_CBR" AfterTargets="Build" DependsOnTargets="CF_Core">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+		<MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=check_boxes_and_radios"/>
+		<CallTarget Targets="CF_CBR"/>
+		<ZipDirectory
+			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"
+			DestinationFile="$(MSBuildProjectDirectory)/exports/$(CBRAddonName)_addon.zip"
+			Overwrite="true"
+		/>
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+	</Target>
+</Project>
