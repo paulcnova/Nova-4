@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dqbjs5q1gx8ne"]
 
-[ext_resource type="Material" uid="uid://dwldpnjr45evw" path="res://addons/nova/prototyping/red/prototype_red_12.material" id="1_hjvc4"]
+[ext_resource type="Material" uid="uid://0v2q65q0dpau" path="res://addons/nova/prototyping/red/prototype_red_01.material" id="1_hjvc4"]
 
 [node name="Node" type="Node"]
 
