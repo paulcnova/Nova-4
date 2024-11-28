@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqbjs5q1gx8ne"]
+
+[ext_resource type="Material" uid="uid://dwldpnjr45evw" path="res://addons/nova/prototyping/red/prototype_red_12.material" id="1_hjvc4"]
+
+[node name="Node" type="Node"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.08862, 0.858342, 0)
+material_override = ExtResource("1_hjvc4")
+size = Vector3(7.17725, 2.67651, 1)
