@@ -1,0 +1,6 @@
+
+<Project>
+	<Target Name="Export_Prototyping" Label="Export_Prototyping" AfterTargets="Build">
+		<CallTarget Targets="Zip_Prototyping"/>
+	</Target>
+</Project>

@@ -8,6 +8,7 @@
 	
 	<ItemGroup>
 		<UIManagerAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+		<UIManagerAddonFiles Remove="$(MSBuildThisFileDirectory)/**/*.ExportList.props"/>
 	</ItemGroup>
 	
 	<Target Name="CF_UI_Manager" Label="CF_UI_Manager">
@@ -18,7 +19,7 @@
 		/>
 	</Target>
 	
-	<Target Name="Zip_UI_Manager" Label="Zip_UI_Manager" AfterTargets="Build;Zip_Core">
+	<Target Name="Zip_UI_Manager" Label="Zip_UI_Manager">
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
 		<MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=ui_manager"/>
 		<CallTarget Targets="CF_UI_Manager"/>

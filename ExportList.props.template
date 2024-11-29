@@ -1,0 +1,9 @@
+
+__EXPORT_NAME__
+__ZIP_NAME__
+
+<Project>
+	<Target Name="__EXPORT_NAME__" Label="__EXPORT_NAME__" AfterTargets="Build">
+		<CallTarget Targets="__ZIP_NAME__"/>
+	</Target>
+</Project>

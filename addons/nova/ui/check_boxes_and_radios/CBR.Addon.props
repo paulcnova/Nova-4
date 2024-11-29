@@ -8,6 +8,7 @@
 	
 	<ItemGroup>
 		<CBRAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+		<CBRAddonFiles Remove="$(MSBuildThisFileDirectory)/**/*.ExportList.props"/>
 	</ItemGroup>
 	
 	<Target Name="CF_CBR" Label="CF_CBR">
@@ -18,7 +19,7 @@
 		/>
 	</Target>
 	
-	<Target Name="Zip_CBR" Label="Zip_CBR" AfterTargets="Build" DependsOnTargets="CF_Core">
+	<Target Name="Zip_CBR" Label="Zip_CBR">
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
 		<MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=check_boxes_and_radios"/>
 		<CallTarget Targets="CF_CBR"/>

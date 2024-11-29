@@ -1,0 +1,6 @@
+
+<Project>
+	<Target Name="Export_UI_Manager" Label="Export_UI_Manager" AfterTargets="Build;Zip_Core">
+		<CallTarget Targets="Zip_UI_Manager"/>
+	</Target>
+</Project>

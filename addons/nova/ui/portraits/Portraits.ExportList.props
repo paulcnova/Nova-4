@@ -1,0 +1,6 @@
+
+<Project>
+	<Target Name="Export_UI_Portraits" Label="Export_UI_Portraits" AfterTargets="Build">
+		<CallTarget Targets="Zip_UI_Portraits"/>
+	</Target>
+</Project>

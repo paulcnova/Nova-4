@@ -17,6 +17,7 @@ __ZIP_NAME__
 	
 	<ItemGroup>
 		<__NAME_ADDON_FILES__ Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+		<__NAME_ADDON_FILES__ Remove="$(MSBuildThisFileDirectory)/**/*.ExportList.props"/>
 	</ItemGroup>
 	
 	<Target Name="__CF_NAME__" Label="__CF_NAME__">
@@ -27,7 +28,7 @@ __ZIP_NAME__
 		/>
 	</Target>
 	
-	<Target Name="__ZIP_NAME__" Label="__ZIP_NAME__" AfterTargets="Build">
+	<Target Name="__ZIP_NAME__" Label="__ZIP_NAME__">
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
 		<!-- <MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=__NAME__"/> -->
 		<CallTarget Targets="__CF_NAME__"/>

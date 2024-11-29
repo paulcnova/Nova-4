@@ -1,0 +1,6 @@
+
+<Project>
+	<Target Name="Export_Tooltips" Label="Export_Tooltips" AfterTargets="Build;Zip_Core">
+		<CallTarget Targets="Zip_Tooltips"/>
+	</Target>
+</Project>

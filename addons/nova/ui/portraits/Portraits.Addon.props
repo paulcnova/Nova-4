@@ -8,8 +8,8 @@
 	
 	<Target Name="CF_UI_Portraits" Label="CF_UI_Portraits">
 		<ItemGroup>
-			<UIPortraitsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.png"/>
-			<UIPortraitsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.Addon.props"/>
+			<UIPortraitsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+			<UIPortraitsAddonFiles Remove="$(MSBuildThisFileDirectory)/**/*.ExportList.props"/>
 		</ItemGroup>
 		
 		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(UIPortraitsAddonDirectory)"/>
@@ -19,7 +19,7 @@
 		/>
 	</Target>
 	
-	<Target Name="Zip_UI_Portraits" Label="Zip_UI_Portraits" AfterTargets="Build">
+	<Target Name="Zip_UI_Portraits" Label="Zip_UI_Portraits">
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
 		<!-- <MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=portraits"/> -->
 		<CallTarget Targets="CF_UI_Portraits"/>

@@ -9,6 +9,7 @@
 	<Target Name="CF_Tooltips" Label="CF_Tooltips">
 		<ItemGroup>
 			<TooltipsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+			<TooltipsAddonFiles Remove="$(MSBuildThisFileDirectory)/**/*.ExportList.props"/>
 		</ItemGroup>
 		
 		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(TooltipsAddonDirectory)"/>
@@ -18,7 +19,7 @@
 		/>
 	</Target>
 	
-	<Target Name="Zip_Tooltips" Label="Zip_Tooltips" AfterTargets="Build">
+	<Target Name="Zip_Tooltips" Label="Zip_Tooltips">
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
 		<MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=tooltips"/>
 		<CallTarget Targets="CF_Tooltips"/>

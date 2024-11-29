@@ -1,0 +1,6 @@
+
+<Project>
+	<Target Name="Export_CBR" Label="Export_CBR" AfterTargets="Build;Zip_Core">
+		<CallTarget Targets="Zip_CBR"/>
+	</Target>
+</Project>

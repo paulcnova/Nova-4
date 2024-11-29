@@ -8,9 +8,8 @@
 	
 	<ItemGroup>
 		<CoreAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+		<CoreAddonFiles Remove="$(MSBuildThisFileDirectory)/**/*.ExportList.props"/>
 	</ItemGroup>
-	
-	<!-- <Import Project="$(MSBuildProjectDirectory)/addons/nova/core/*.Addon.props"/> -->
 	
 	<Target Name="CF_Core" Label="CF_Core">
 		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(CoreAddonDirectory)"/>
@@ -20,7 +19,7 @@
 		/>
 	</Target>
 	
-	<Target Name="Zip_Core" Label="Zip_Core" AfterTargets="Build">
+	<Target Name="Zip_Core" Label="Zip_Core">
 		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
 		<CallTarget Targets="CF_Core"/>
 		<ZipDirectory
