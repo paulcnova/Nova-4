@@ -1,0 +1,6 @@
+
+<Project>
+	<Target Name="Export_KenneyInterfaceIcons" Label="Export_KenneyInterfaceIcons" AfterTargets="Build">
+		<CallTarget Targets="ZIP_KenneyInterfaceIcons"/>
+	</Target>
+</Project>

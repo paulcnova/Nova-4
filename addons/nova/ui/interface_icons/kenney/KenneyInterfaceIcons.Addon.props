@@ -1,0 +1,33 @@
+
+<Project>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);kenney_interface_icon</DefineConstants>
+		<KenneyInterfaceIconsAddonDirectory>prototyping/interface_icons/kenney</KenneyInterfaceIconsAddonDirectory>
+		<KenneyInterfaceIconsAddonName>kenney_interface_icons</KenneyInterfaceIconsAddonName>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<KenneyInterfaceIconsAddonFiles Include="$(MSBuildThisFileDirectory)/**/*.*"/>
+		<KenneyInterfaceIconsAddonFiles Remove="$(MSBuildThisFileDirectory)/**/*.ExportList.props"/>
+	</ItemGroup>
+	
+	<Target Name="CF_KenneyInterfaceIcons" Label="CF_KenneyInterfaceIcons">
+		<MakeDir Directories="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(KenneyInterfaceIconsAddonDirectory)"/>
+		<Copy
+			SourceFiles="@(KenneyInterfaceIconsAddonFiles)"
+			DestinationFolder="$(MSBuildProjectDirectory)/exports/temp/addons/nova/$(KenneyInterfaceIconsAddonDirectory)/%(RecursiveDir)"
+		/>
+	</Target>
+	
+	<Target Name="ZIP_KenneyInterfaceIcons" Label="ZIP_KenneyInterfaceIcons">
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+		<!-- <MSBuild Projects="$(MSBuildProjectFile)" Targets="CF_Core" Properties="ADDON=kenney_interface_icons"/> -->
+		<CallTarget Targets="CF_KenneyInterfaceIcons"/>
+		<ZipDirectory
+			SourceDirectory="$(MSBuildProjectDirectory)/exports/temp"
+			DestinationFile="$(MSBuildProjectDirectory)/exports/$(KenneyInterfaceIconsAddonName)_addon.zip"
+			Overwrite="true"
+		/>
+		<RemoveDir Directories="$(MSBuildProjectDirectory)/exports/temp"/>
+	</Target>
+</Project>
