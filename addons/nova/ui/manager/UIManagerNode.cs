@@ -8,7 +8,7 @@ namespace Nova.UI
 {
 	/// <summary>A node that manager the UI</summary>
 	[SceneLocation("res://addons/nova/ui/manager/ui_manager_template.tscn")]
-	public sealed partial class UIManagerNode : Control
+	public sealed partial class UIManagerNode : CanvasLayer
 	{
 		#region Properties
 		
@@ -99,7 +99,10 @@ namespace Nova.UI
 			{
 				this.UpdateAllViews(ViewType.Keyboard);
 			}
-			this.CurrentPage.Call(UIControl.MethodName.OnInput, ev);
+			if(this.CurrentPage != null)
+			{
+				this.CurrentPage.Call(UIControl.MethodName.OnInput, ev);
+			}
 			foreach(System.Type type in this.widgetsShown)
 			{
 				Widget widget = this.GetWidget(type);
@@ -114,6 +117,19 @@ namespace Nova.UI
 		#region Public Methods
 		
 		#region Pages Methods
+		
+		/// <summary>Adds the given page to the UI Manager.</summary>
+		/// <param name="page">The page to add.</param>
+		public void AddPage(Page page)
+		{
+			if(page == null) { return; }
+			if(this.ContainsPage(page.GetType()))
+			{
+				return;
+			}
+			this.PagesContainer.AddChild(page);
+			this.AddPageToManagerData(page);
+		}
 		
 		/// <summary>Changes the current page's view to the given view type.</summary>
 		/// <param name="viewType">The view type to change to.</param>
@@ -249,6 +265,27 @@ namespace Nova.UI
 			}
 		}
 		
+		/// <summary>Closes the page if the page is the given type.</summary>
+		/// <param name="transition">The transition to close the page on.</param>
+		/// <typeparam name="T">The type of page to check before closing.</typeparam>
+		public void ClosePageIf<T>(UITransition transition = null) where T : Page
+		{
+			if(this.CurrentPage != null && this.CurrentPage.GetType() == typeof(T))
+			{
+				this.ClosePage(transition);
+			}
+		}
+		
+		/// <summary>Finds if the page is contained within the UI Manager.</summary>
+		/// <typeparam name="T">The type of the page to search for.</typeparam>
+		/// <returns>Returns true if the page is found within the UI Manager.</returns>
+		public bool ContainsPage<T>() where T : Page => this.ContainsPage(typeof(T));
+		
+		/// <summary>Finds if the page is contained within the UI Manager.</summary>
+		/// <param name="type">The type of the page to search for.</param>
+		/// <returns>Returns true if the page is found within the UI Manager.</returns>
+		public bool ContainsPage(System.Type type) => this.pages.ContainsKey(type);
+		
 		/// <summary>Goes back one page in the history.</summary>
 		/// <param name="transition">The transition to open the page on.</param>
 		/// <returns>Returns the previous page, or null if there is no previous page.</returns>
@@ -310,6 +347,33 @@ namespace Nova.UI
 		#endregion // Pages Methods
 		
 		#region Widget Methods
+		
+		/// <summary>Adds the widget to the UI Manager.</summary>
+		/// <param name="widget">The widget to add.</param>
+		public void AddWidget(Widget widget)
+		{
+			if(this.ContainsWidget(widget.GetType()))
+			{
+				return;
+			}
+			
+			int priority = widget.Priority;
+			Godot.Collections.Array<Node> children = this.WidgetsContainer.GetChildren();
+			
+			this.WidgetsContainer.AddChild(widget);
+			for(int i = 0; i < children.Count; ++i)
+			{
+				if(children[i] is Widget child)
+				{
+					if(priority <= child.Priority)
+					{
+						this.WidgetsContainer.MoveChild(widget, i);
+						break;
+					}
+				}
+			}
+			this.AddWidgetToManagerData(widget);
+		}
 		
 		/// <summary>Changes the widget's view to the given view type.</summary>
 		/// <param name="viewType">The view type to change to.</param>
@@ -508,6 +572,16 @@ namespace Nova.UI
 			return widgets;
 		}
 		
+		/// <summary>Finds if the widget is contained within the UI Manager.</summary>
+		/// <typeparam name="T">The type of widget to search with.</typeparam>
+		/// <returns>Returns true if the widget is found within the UI Manager.</returns>
+		public bool ContainsWidget<T>() where T : Widget => this.ContainsWidget(typeof(T));
+		
+		/// <summary>Finds if the widget is contained within the UI Manager.</summary>
+		/// <param name="type">The type of widget to search with.</param>
+		/// <returns>Returns true if the widget is found within the UI Manager.</returns>
+		public bool ContainsWidget(System.Type type) => this.widgets.ContainsKey(type);
+		
 		#endregion // Widget Methods
 		
 		#region Getter Methods
@@ -522,7 +596,7 @@ namespace Nova.UI
 		/// <returns>Returns the page.</returns>
 		public Page GetPage(System.Type type)
 			=> type != null
-				? (this.pages.TryGetValue(type, out Page page) ? page : null)
+				? (this.pages.TryGetValue(type, out Page page) ? page : this.InstantiatePage(type))
 				: null;
 		
 		/// <summary>Gets the widget.</summary>
@@ -535,7 +609,7 @@ namespace Nova.UI
 		/// <returns>Returns the widget.</returns>
 		public Widget GetWidget(System.Type type)
 			=> type != null
-				? (this.widgets.TryGetValue(type, out Widget widget) ? widget : null)
+				? (this.widgets.TryGetValue(type, out Widget widget) ? widget : this.InstantiateWidget(type))
 				: null;
 		
 		/// <summary>Gets the data node.</summary>
@@ -598,6 +672,51 @@ namespace Nova.UI
 			return null;
 		}
 		
+		/// <summary>Instantiates the page from the given type.</summary>
+		/// <param name="type">The type of page to instantiate.</param>
+		/// <returns>Returns the instantiated page, returns null if nothing got instantiated.</returns>
+		private Page InstantiatePage(System.Type type)
+		{
+			if(type == null || !type.IsSubclassOf(typeof(Page)))
+			{
+				return null;
+			}
+			
+			SceneLocationAttribute location = type.GetCustomAttribute<SceneLocationAttribute>();
+			
+			if(location == null) { return null; }
+			
+			Page page = GDX.Instantiate<Page>(location.ScenePath);
+			
+			if(page == null) { return null; }
+			
+			this.AddPage(page);
+			return page;
+		}
+		
+		/// <summary>Instantiates the widget from the given type.</summary>
+		/// <param name="type">The type of widget to instantiate.</param>
+		/// <returns>Returns the instantiated widget, returns null if nothing got instantiated.</returns>
+		private Widget InstantiateWidget(System.Type type)
+		{
+			if(type == null || !type.IsSubclassOf(typeof(Widget)))
+			{
+				return null;
+			}
+			
+			SceneLocationAttribute location = type.GetCustomAttribute<SceneLocationAttribute>();
+			
+			if(location == null) { return null; }
+			
+			Widget widget = GDX.Instantiate<Widget>(location.ScenePath);
+			
+			if(widget == null) { return null; }
+			
+			this.AddWidget(widget);
+			
+			return widget;
+		}
+		
 		#endregion // Getter Methods
 		
 		#endregion // Public Methods
@@ -624,19 +743,12 @@ namespace Nova.UI
 			foreach(Page page in this.GetChildrenRecursively<Page>())
 			{
 				page.Call(UIControl.MethodName.SetupFocus);
-				
-				if(!this.pages.ContainsKey(page.GetType()))
-				{
-					this.pages.Add(page.GetType(), page);
-				}
+				this.AddPageToManagerData(page);
 			}
 			
 			foreach(Widget widget in this.GetChildrenRecursively<Widget>())
 			{
-				if(!this.widgets.ContainsKey(widget.GetType()))
-				{
-					this.widgets.Add(widget.GetType(), widget);
-				}
+				this.AddWidgetToManagerData(widget);
 				sortedWidgets.Add(widget);
 			}
 			
@@ -690,6 +802,8 @@ namespace Nova.UI
 		/// <param name="nextViewType">The view type to change to.</param>
 		private void UpdateAllViews(ViewType nextViewType)
 		{
+			if(this.ViewType == nextViewType) { return; }
+			
 			this.ViewType = nextViewType;
 			if(this.CurrentPage != null)
 			{
@@ -702,6 +816,30 @@ namespace Nova.UI
 				if(widget == null) { continue; }
 				widget.ChangeView(this.ViewType);
 			}
+		}
+		
+		/// <summary>Adds the page to the data the manager uses to regulate pages.</summary>
+		/// <param name="page">The page to add to the data set.</param>
+		private void AddPageToManagerData(Page page)
+		{
+			if(page == null) { return; }
+			if(this.ContainsPage(page.GetType()))
+			{
+				return;
+			}
+			this.pages.Add(page.GetType(), page);
+		}
+		
+		/// <summary>Adds the widget to the data the manager uses to regulate widgets.</summary>
+		/// <param name="widget">The widget to add to the data set.</param>
+		private void AddWidgetToManagerData(Widget widget)
+		{
+			if(widget == null) { return; }
+			if(this.ContainsWidget(widget.GetType()))
+			{
+				return;
+			}
+			this.widgets.Add(widget.GetType(), widget);
 		}
 		
 		#endregion // Private Methods
@@ -778,6 +916,17 @@ namespace Nova
 		#region Public Methods
 		
 		#region Pages Methods
+		
+		/// <inheritdoc cref="UIManagerNode.AddPage(Page)"/>
+		public static void AddPage(Page page)
+		{
+			if(UIManagerNode.Instance == null)
+			{
+				GDX.PrintWarning($"UI Manager is not instantiated! Could not add page {page.GetType()}");
+				return;
+			}
+			UIManagerNode.Instance.AddPage(page);
+		}
 		
 		/// <inheritdoc cref="UIManagerNode.ChangeCurrentPageView(ViewType)"/>
 		public static Page ChangeCurrentPageView(ViewType viewType)
@@ -870,6 +1019,39 @@ namespace Nova
 			UIManagerNode.Instance.ClosePage(transition);
 		}
 		
+		/// <inheritdoc cref="UIManagerNode.ClosePageIf{T}(UITransition)"/>
+		public static void ClosePageIf<T>(UITransition transition = null) where T : Page
+		{
+			if(UIManagerNode.Instance == null)
+			{
+				GDX.PrintWarning($"UI Manager is not instantiated! Could not close page");
+				return;
+			}
+			UIManagerNode.Instance.ClosePageIf<T>(transition);
+		}
+		
+		/// <inheritdoc cref="UIManagerNode.ContainsPage{T}()"/>
+		public static bool ContainsPage<T>() where T : Page
+		{
+			if(UIManagerNode.Instance == null)
+			{
+				GDX.PrintWarning($"UI Manager is not instantiated! Could not check if page [{typeof(T)}] is contained within the manager.");
+				return false;
+			}
+			return UIManagerNode.Instance.ContainsPage<T>();
+		}
+		
+		/// <inheritdoc cref="UIManagerNode.ContainsPage(System.Type)"/>
+		public static bool ContainsPage(System.Type type)
+		{
+			if(UIManagerNode.Instance == null)
+			{
+				GDX.PrintWarning($"UI Manager is not instantiated! Could not check if page [{type}] is contained within the manager.");
+				return false;
+			}
+			return UIManagerNode.Instance.ContainsPage(type);
+		}
+		
 		/// <inheritdoc cref="UIManagerNode.GoBack(UITransition)"/>
 		public static Page GoBack(UITransition transition = null)
 		{
@@ -895,6 +1077,17 @@ namespace Nova
 		#endregion // Pages Methods
 		
 		#region Widget Methods
+		
+		/// <inheritdoc cref="UIManagerNode.AddWidget(Widget)"/>
+		public static void AddWidget(Widget widget)
+		{
+			if(UIManagerNode.Instance == null)
+			{
+				GDX.PrintWarning($"UI Manager is not instantiated! Could not add widget {widget.GetType()}");
+				return;
+			}
+			UIManagerNode.Instance.AddWidget(widget);
+		}
 		
 		/// <inheritdoc cref="UIManagerNode.ChangeWidgetView{T}(ViewType)"/>
 		public static T ChangeWidgetView<T>(ViewType viewType) where T : Widget
@@ -1054,6 +1247,28 @@ namespace Nova
 				return new List<Widget>();
 			}
 			return UIManagerNode.Instance.GetAllShownWidgets();
+		}
+		
+		/// <inheritdoc cref="UIManagerNode.ContainsWidget{T}()"/>
+		public static bool ContainsWidget<T>() where T : Widget
+		{
+			if(UIManagerNode.Instance == null)
+			{
+				GDX.PrintWarning($"UI Manager is not instantiated! Could not find if widget [{typeof(T)}] is contained within the UI Manager.");
+				return false;
+			}
+			return UIManagerNode.Instance.ContainsWidget<T>();
+		}
+		
+		/// <inheritdoc cref="UIManagerNode.ContainsWidget(System.Type)"/>
+		public static bool ContainsWidget(System.Type type)
+		{
+			if(UIManagerNode.Instance == null)
+			{
+				GDX.PrintWarning($"UI Manager is not instantiated! Could not find if widget [{type}] is contained within the UI Manager.");
+				return false;
+			}
+			return UIManagerNode.Instance.ContainsWidget(type);
 		}
 		
 		#endregion // Widget Methods
