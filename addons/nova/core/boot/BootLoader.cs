@@ -41,6 +41,26 @@ public partial class BootLoader : Node
 	
 	#endregion // Godot Methods
 	
+	#region Public Methods
+	
+	/// <summary>Loads the scene from the given resource path.</summary>
+	/// <param name="path">The path to the scene in the resources.</param>
+	/// <remarks>Unloads the current scene.</remarks>
+	public void LoadScene(string path) => this.LoadScene(ResourceLoader.Load<PackedScene>(path));
+	
+	/// <summary>Loads the scene from the given packed scene.</summary>
+	/// <param name="scene">The scene to instantiate and load.</param>
+	/// <remarks>Unloads the current scene.</remarks>
+	public void LoadScene(PackedScene scene)
+	{
+		Node node = scene.Instantiate<Node>();
+		
+		this.SceneContainer.QueueFreeChildren();
+		this.SceneContainer.AddChild(node);
+	}
+	
+	#endregion // Public Methods
+	
 	#region Private Methods
 	
 	/// <summary>Called when content is being loaded.</summary>
