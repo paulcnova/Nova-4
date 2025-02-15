@@ -25,6 +25,9 @@ namespace Nova.UI
 		/// <summary>Set to true to ignore adding pages into the history stack.</summary>
 		private bool ignoreAddingToHistory = false;
 		
+		/// <summary>Gets and sets if the UI Manager should dynamically instantiate pages and widgets when retrieving the page or the widget.</summary>
+		[Export] public bool DynamicallyInstantiate { get; set; } = true;
+		
 		/// <summary>Gets the starting page that first appears on start up.</summary>
 		[Export] public Page StartingPage { get; private set; }
 		
@@ -174,11 +177,7 @@ namespace Nova.UI
 		{
 			Page page = this.GetPage(type);
 			
-			if(page == null)
-			{
-				// TODO: Instance page here
-				return null;
-			}
+			if(page == null) { return null; }
 			
 			if(this.CurrentPage != null)
 			{
@@ -220,11 +219,7 @@ namespace Nova.UI
 		{
 			Page page = this.GetPage(type);
 			
-			if(page == null)
-			{
-				// TODO: Instance page here
-				return null;
-			}
+			if(page == null) { return null; }
 			
 			if(this.CurrentPage != null)
 			{
@@ -413,11 +408,7 @@ namespace Nova.UI
 		{
 			Widget widget = this.GetWidget(type);
 			
-			if(widget == null)
-			{
-				// TODO: Instantiate widget
-				return null;
-			}
+			if(widget == null) { return null; }
 			
 			widget.Toggle(this.ViewType, true, transition);
 			this.widgetsShown.Add(type);
@@ -446,11 +437,7 @@ namespace Nova.UI
 		{
 			Widget widget = this.GetWidget(type);
 			
-			if(widget == null)
-			{
-				// TODO: Instantiate widget
-				return null;
-			}
+			if(widget == null) { return null; }
 			
 			if(widget.Data.GetType() == typeof(TData) && updateData != null)
 			{
@@ -529,11 +516,7 @@ namespace Nova.UI
 		{
 			Widget widget = this.GetWidget(type);
 			
-			if(widget == null)
-			{
-				// TODO: Instantiate widget
-				return null;
-			}
+			if(widget == null) { return null; }
 			
 			if(widget.Data.GetType() == typeof(TData) && updateData != null)
 			{
@@ -677,6 +660,8 @@ namespace Nova.UI
 		/// <returns>Returns the instantiated page, returns null if nothing got instantiated.</returns>
 		private Page InstantiatePage(System.Type type)
 		{
+			if(!this.DynamicallyInstantiate) { return null; }
+			
 			if(type == null || !type.IsSubclassOf(typeof(Page)))
 			{
 				return null;
@@ -699,6 +684,8 @@ namespace Nova.UI
 		/// <returns>Returns the instantiated widget, returns null if nothing got instantiated.</returns>
 		private Widget InstantiateWidget(System.Type type)
 		{
+			if(!this.DynamicallyInstantiate) { return null; }
+			
 			if(type == null || !type.IsSubclassOf(typeof(Widget)))
 			{
 				return null;
