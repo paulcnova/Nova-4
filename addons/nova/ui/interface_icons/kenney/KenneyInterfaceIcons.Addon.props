@@ -2,7 +2,7 @@
 <Project>
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);kenney_interface_icon</DefineConstants>
-		<KenneyInterfaceIconsAddonDirectory>prototyping/interface_icons/kenney</KenneyInterfaceIconsAddonDirectory>
+		<KenneyInterfaceIconsAddonDirectory>ui/interface_icons/kenney</KenneyInterfaceIconsAddonDirectory>
 		<KenneyInterfaceIconsAddonName>kenney_interface_icons</KenneyInterfaceIconsAddonName>
 	</PropertyGroup>
 	

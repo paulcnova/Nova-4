@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Nova 4"
+config/tags=PackedStringArray("utility")
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
-config/tags=PackedStringArray("utility")
 
 [dotnet]
 

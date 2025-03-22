@@ -1,0 +1,6 @@
+
+<Project>
+	<Target Name="Export_Logic_Triggers" Label="Export_Logic_Triggers" AfterTargets="Build">
+		<CallTarget Targets="Zip_Logic_Triggers"/>
+	</Target>
+</Project>
